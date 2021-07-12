@@ -1,0 +1,59 @@
+#!/bin/bash
+
+
+# Check to see if Docker is present on the system
+type docker >/dev/null 2>&1 || { echo -e >&2 "\n\033[31mDocker is required for QuickPcap. Please install docker first. Exiting...\033[m"; exit 1; }
+
+banner() {
+    echo ""
+    echo -e "\033[36m            ╔═╗ ┬ ┬┬┌─┐┬┌─  ╔═╗┌─┐┌─┐┌─┐\033[m "
+    echo -e "\033[36m            ║═╬╗│ │││  ├┴┐  ╠═╝│  ├─┤├─┘\033[m "
+    echo -e "\033[36m            ╚═╝╚└─┘┴└─┘┴ ┴  ╩  └─┘┴ ┴┴  \033[m "
+}
+
+
+animate()
+# Start animation for the text
+{
+   animation_text=( " /* PLEASE WAIT... */ " "                      " )
+
+    while :
+    do
+        for i in "${animation_text[@]}"
+        do
+            echo -en "\033[3;96m\r$i\033[m"
+            sleep 0.9
+        done
+    done
+}
+
+
+if [[ "$(docker images -q quickpcap 2> /dev/null)" == "" ]]; then
+# Check if `quickpcap` docker image already exists on system
+    banner
+    echo
+    echo "Building \`quickpcap\` docker image"
+    animate &
+    ANIMATE_ID=$!
+    docker build -t quickpcap . > /dev/null
+    status=$(echo $?)
+    kill -13 $ANIMATE_ID
+    #
+    # Check to see if the docker build was successful
+    if [ $status -eq "0" ]; then
+        echo -e "\n\033[0;32mSuccessfully built \`quickpcap\` docker image. Please run standalone \`quickpcap.sh\` script now. Thanks! :)\033[m"
+        # Add symlink to quickpcap.sh in /usr/local/bin/ 
+        ln -s $(pwd)/quickpcap.sh /usr/local/bin/ 2> /dev/null
+        if [ $? -eq "0" ]; then
+                echo -e "\033[0;32mSuccessfully added symlink to quickpcap.sh in /usr/local/bin/ :)\033[m"
+        else
+                echo -e "\033[0;33mWARNING: Failed to add symlink to quickpcap.sh in /usr/local/bin/. Please add \`quickpcap.sh\` to \$PATH manually\033[m"
+        fi
+    else
+        echo -e "\n\033[0;31mERROR: Failed to build \`quickpcap\` docker image. Please rerun install script\033[m"
+    fi
+    echo
+else
+    echo -e "\n\033[0;33m\`quickpcap\` docker image already exists. If you like to reinstall please run \`uninstall\` script first\033[m"
+fi
+

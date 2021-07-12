@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Check to see if Docker is present on the system
+type docker >/dev/null 2>&1 || { echo -e >&2 "\nDocker is required for QuickPcap. Please install docker first. Exiting..."; exit 1; }
+
+
+if [[ "$(docker images -q quickpcap 2> /dev/null)" == "" ]]; then
+    echo -e "\033[0;33m\n\`quickpcap\` docker image not found. Nothing to do\033[m"
+else
+    docker rmi -f quickpcap > /dev/null
+    if [ $? -eq "0" ]; then
+        echo -e "\033[0;32m\nRemoved \`quickpcap\` docker image. Thanks! :)\033[m"
+        # Remove symlink to quickpcap.sh from /usr/local/bin/ 
+        rm /usr/local/bin/quickpcap.sh 2> /dev/null
+        if [ $? -eq "0" ]; then
+            echo -e "\033[0;32mRemoved symlink to quickpcap.sh from /usr/local/bin/ :)\033[m"
+        fi
+
+    else
+        echo -e "\n\033[0;31mERROR: Failed to remove \`quickpcap\` docker image. Please rerun uninstall script\033[m"
+    fi
+fi

@@ -1,0 +1,5 @@
+{
+    "http": "HTTP/1.1 200 OK\nContent-Length: 262\nContent-type: text/html; charset=utf-8\nServer: SimpleHTTP/0.6 Python/3.8.2\n\n<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">\n<html>\n<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n<title>QuickPcap</title>\n</head>\n<body>\nThank you for using QuickPcap :)\n</body>\n</html>\n",
+    
+    "non_http": "\nThank you for using QuickPcap :)\n"
+}
