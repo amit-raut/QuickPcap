@@ -119,9 +119,9 @@ if [[ -x "$inFile" ]]; then
     ./$inFile > /dev/null
 else
     if [ "$protocol" == "tcp" ]; then
-        cat $inFile | nc -c localhost 3333 > /dev/null
+        cat $inFile | nc -w 9 -c localhost 3333 > /dev/null
     elif [ "$protocol" == "udp" ]; then
-        cat $inFile | nc -u -c localhost 3333 > /dev/null
+        cat $inFile | nc -w 9 -u -c localhost 3333 > /dev/null
     fi
 fi
 
